@@ -1,0 +1,10 @@
+1;1;2000;1
+2;1;1990;0
+3;1;2009;0
+4;1;1992;0
+5;1;1999;0
+6;2;André Snows;0
+7;2;André Barbosa;0
+8;2;André Neves;1
+9;2;Ricardo Marciano;0
+10;2;Vinícius Marques;0

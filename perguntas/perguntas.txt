@@ -1,0 +1,2 @@
+1;Em qual ano a faeterj foi fundada?
+2;Qual nome do professor que ministra a aula de 3DAW?
