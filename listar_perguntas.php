@@ -33,8 +33,7 @@ $linhas_respostas = ler_linhas($arquivo_respostas);
         $texto_pergunta = $campos_pergunta[1];
         ?>
 
-        <h3><?php echo $id_pergunta; ?>. <?php echo htmlspecialchars($texto_pergunta); ?></h3>
-
+        <h3><?php echo $id_pergunta; ?>. <?php echo htmlspecialchars($texto_pergunta); ?> <a href="ver_pergunta.php?id_pergunta=<?php echo $id_pergunta; ?>">Ver</a></h3>
         <ul>
             <?php foreach ($linhas_respostas as $linha_resposta) { ?>
                 <?php
