@@ -7,4 +7,4 @@
 7;2;André Barbosa;0
 8;2;André Neves;1
 9;2;Ricardo Marciano;0
-10;2;Vinícius Marques;0
+10;2;Vinícius Marquess;0

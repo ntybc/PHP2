@@ -1,0 +1,2 @@
+1;Maria Sousa;1990-05-20;12345678909;maria@empresa.com;$2y$10$...2
+2;Nathalia;2007-03-05;20522467709;nathaliayasmin2007@gmail.com;$2y$10$64hLkw98rrEi8U8BuufWMOf3T2di/eybwNCvZ5dTGBbDyfjiKebvi

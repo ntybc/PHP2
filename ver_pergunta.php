@@ -16,6 +16,7 @@ $id_pergunta_procurada = $_GET["id_pergunta"] ?? "";
 
 $pergunta_encontrada = false;
 $texto_pergunta = "";
+$tipo_pergunta = "multipla_escolha";
 
 // Procura a pergunta pelo id
 foreach (ler_linhas($arquivo_perguntas) as $linha_pergunta) {
@@ -23,6 +24,10 @@ foreach (ler_linhas($arquivo_perguntas) as $linha_pergunta) {
 
     if ($campos_pergunta[0] === $id_pergunta_procurada) {
         $texto_pergunta = $campos_pergunta[1];
+
+        // Perguntas antigas, sem o tipo, contam como múltipla escolha
+        $tipo_pergunta = $campos_pergunta[2] ?? "multipla_escolha";
+
         $pergunta_encontrada = true;
         break;
     }
@@ -46,6 +51,7 @@ if ($pergunta_encontrada) {
 <head>
     <meta charset="UTF-8">
     <title>Ver pergunta</title>
+    <link rel="stylesheet" href="estilo.css">
 </head>
 <body>
     <h1>Pergunta</h1>
@@ -55,16 +61,30 @@ if ($pergunta_encontrada) {
     <?php } else { ?>
         <h3><?php echo $id_pergunta_procurada; ?>. <?php echo htmlspecialchars($texto_pergunta); ?></h3>
 
-        <ul>
-            <?php foreach ($lista_respostas as $campos_resposta) { ?>
-                <li>
-                    <?php echo htmlspecialchars($campos_resposta[2]); ?>
-                    <?php if ($campos_resposta[3] === "1") { ?>
-                        <strong>(certa)</strong>
-                    <?php } ?>
-                </li>
+        <?php if ($tipo_pergunta === "texto") { ?>
+
+            <p><em>Pergunta de resposta em texto (sem correção).</em></p>
+
+            <?php if (empty($lista_respostas)) { ?>
+                <p>Sem resposta de orientação.</p>
+            <?php } else { ?>
+                <p><strong>Resposta de orientação:</strong> <?php echo htmlspecialchars($lista_respostas[0][2]); ?></p>
             <?php } ?>
-        </ul>
+
+        <?php } else { ?>
+
+            <ul>
+                <?php foreach ($lista_respostas as $campos_resposta) { ?>
+                    <li>
+                        <?php echo htmlspecialchars($campos_resposta[2]); ?>
+                        <?php if ($campos_resposta[3] === "1") { ?>
+                            <strong>(certa)</strong>
+                        <?php } ?>
+                    </li>
+                <?php } ?>
+            </ul>
+
+        <?php } ?>
     <?php } ?>
 
     <p><a href="listar_perguntas.php">Voltar para a lista</a> | <a href="index.php">Menu</a></p>

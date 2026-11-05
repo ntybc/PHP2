@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Criar perguntas</title>
+    <link rel="stylesheet" href="estilo.css">
 </head>
 <body>
     <h1>Perguntas de múltipla escolha</h1>
