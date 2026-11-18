@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Ver pergunta</title>
+    <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+    <h1>Pergunta</h1>
+
+    <!-- Aqui aparece a mensagem de erro, se a pergunta não existir -->
+    <div id="mensagem"></div>
+
+    <!-- O JavaScript coloca a pergunta e as respostas aqui -->
+    <div id="pergunta"></div>
+
+    <p><a href="listar_perguntas.html">Voltar para a lista</a> | <a href="index.html">Menu</a></p>
+
+    <script src="js/funcoes.js"></script>
+    <script>
+        async function carregarPergunta() {
+            // Pega o id que veio no endereço: ver_pergunta.html?id_pergunta=1
+            const id_pergunta = pegarParametro("id_pergunta");
+
+            try {
+                const json = await chamarApi("api/perguntas.php?acao=ver&id_pergunta=" + encodeURIComponent(id_pergunta));
+                const pergunta = json.pergunta;
+
+                let html = `<h3>${pergunta.id_pergunta}. ${escaparHtml(pergunta.texto_pergunta)}</h3>`;
+
+                if (pergunta.tipo_pergunta === "texto") {
+                    html += "<p><em>Pergunta de resposta em texto (sem correção).</em></p>";
+
+                    if (pergunta.respostas.length === 0) {
+                        html += "<p>Sem resposta de orientação.</p>";
+                    } else {
+                        html += `<p><strong>Resposta de orientação:</strong> ${escaparHtml(pergunta.respostas[0].texto_resposta)}</p>`;
+                    }
+                } else {
+                    html += "<ul>";
+                    for (const resposta of pergunta.respostas) {
+                        html += `<li>${escaparHtml(resposta.texto_resposta)}`;
+                        if (resposta.is_resposta_certa) {
+                            html += " <strong>(certa)</strong>";
+                        }
+                        html += "</li>";
+                    }
+                    html += "</ul>";
+                }
+
+                document.getElementById("pergunta").innerHTML = html;
+            } catch (erro) {
+                mostrarErro(erro);
+            }
+        }
+
+        carregarPergunta();
+    </script>
+</body>
+</html>
