@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Listar usuários</title>
+    <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+    <h1>Usuários cadastrados</h1>
+
+    <!-- Aqui aparece a mensagem de sucesso ou de erro que o PHP mandou -->
+    <div id="mensagem"></div>
+
+    <!-- A tabela é montada pelo JavaScript com o JSON que o PHP devolve -->
+    <div id="tabela_usuarios"></div>
+
+    <p><a href="criar_usuario.html">Criar usuário</a> | <a href="index.html">Menu</a></p>
+
+    <script src="js/funcoes.js"></script>
+    <script>
+        // Pede a lista para o PHP e monta a tabela
+        async function carregarUsuarios() {
+            const area_tabela = document.getElementById("tabela_usuarios");
+
+            try {
+                const json = await chamarApi("api/usuarios.php?acao=listar");
+
+                if (json.usuarios.length === 0) {
+                    area_tabela.innerHTML = "<p>Nenhum usuário cadastrado ainda.</p>";
+                    return;
+                }
+
+                let html = `
+                    <table border="1" cellpadding="6" cellspacing="0">
+                        <tr>
+                            <th>Id</th>
+                            <th>Nome</th>
+                            <th>Data de nascimento</th>
+                            <th>CPF</th>
+                            <th>E-mail</th>
+                            <th>Ações</th>
+                        </tr>`;
+
+                // A senha nem vem do PHP, então não tem como aparecer aqui
+                for (const usuario of json.usuarios) {
+                    html += `
+                        <tr>
+                            <td>${usuario.id_usuario}</td>
+                            <td>${escaparHtml(usuario.nome_usuario)}</td>
+                            <td>${escaparHtml(usuario.data_nascimento_formatada)}</td>
+                            <td>${escaparHtml(usuario.cpf_formatado)}</td>
+                            <td>${escaparHtml(usuario.email_usuario)}</td>
+                            <td>
+                                <a href="alterar_usuario.html?id_usuario=${usuario.id_usuario}">Alterar</a>
+                                <button type="button" class="botao-excluir" onclick="excluirUsuario('${usuario.id_usuario}')">Excluir</button>
+                            </td>
+                        </tr>`;
+                }
+
+                html += "</table>";
+                area_tabela.innerHTML = html;
+            } catch (erro) {
+                mostrarErro(erro);
+            }
+        }
+
+        // Manda o id para o PHP excluir e depois recarrega a tabela
+        async function excluirUsuario(id_usuario) {
+            if (!confirm("Tem certeza que deseja excluir este usuário?")) {
+                return;
+            }
+
+            try {
+                const json = await chamarApi("api/usuarios.php?acao=excluir", { id_usuario: id_usuario });
+                mostrarMensagem(json.mensagem, "sucesso");
+                carregarUsuarios();
+            } catch (erro) {
+                mostrarErro(erro);
+            }
+        }
+
+        // Assim que a página abre, já carrega a tabela
+        carregarUsuarios();
+    </script>
+</body>
+</html>
