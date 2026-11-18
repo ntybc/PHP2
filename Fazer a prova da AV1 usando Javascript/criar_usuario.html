@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Criar usuário</title>
+    <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+    <h1>Criar usuário</h1>
+
+    <!-- Aqui aparecem as mensagens de sucesso ou de erro que o PHP mandou -->
+    <div id="mensagem"></div>
+
+    <form id="form_usuario">
+        <p>
+            <label>Nome:</label><br>
+            <input type="text" id="nome_usuario" size="50" required>
+        </p>
+
+        <p>
+            <label>Data de nascimento:</label><br>
+            <input type="date" id="data_nascimento" required>
+        </p>
+
+        <p>
+            <label>CPF:</label><br>
+            <input type="text" id="cpf_usuario" size="20" maxlength="14" placeholder="000.000.000-00" required>
+        </p>
+
+        <p>
+            <label>E-mail:</label><br>
+            <input type="email" id="email_usuario" size="50" required>
+        </p>
+
+        <p>
+            <label>Senha (mínimo 6 caracteres):</label><br>
+            <input type="password" id="senha_usuario" minlength="6" required>
+        </p>
+
+        <button type="submit">Salvar usuário</button>
+    </form>
+
+    <p><a href="listar_usuarios.html">Voltar para a lista</a> | <a href="index.html">Menu</a></p>
+
+    <script src="js/funcoes.js"></script>
+    <script>
+        const formulario = document.getElementById("form_usuario");
+
+        // Não deixa escolher data no futuro no calendário (o PHP também confere)
+        document.getElementById("data_nascimento").max = new Date().toLocaleDateString("sv-SE");
+
+        formulario.addEventListener("submit", async (evento) => {
+            // Não deixa o navegador mudar de página: quem manda os dados é o fetch
+            evento.preventDefault();
+
+            // Junta os valores (o PHP confere CPF, data, e-mail, senha e se já existe)
+            const dados = {
+                nome_usuario: document.getElementById("nome_usuario").value,
+                data_nascimento: document.getElementById("data_nascimento").value,
+                cpf_usuario: document.getElementById("cpf_usuario").value,
+                email_usuario: document.getElementById("email_usuario").value,
+                senha_usuario: document.getElementById("senha_usuario").value
+            };
+
+            try {
+                const json = await chamarApi("api/usuarios.php?acao=criar", dados);
+                mostrarMensagem(json.mensagem, "sucesso");
+                formulario.reset();
+            } catch (erro) {
+                mostrarErro(erro);
+            }
+        });
+    </script>
+</body>
+</html>
