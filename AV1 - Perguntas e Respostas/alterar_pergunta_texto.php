@@ -2,7 +2,7 @@
 $arquivo_perguntas = "perguntas/perguntas.txt";
 $arquivo_respostas = "respostas/respostas.txt";
 
-// Lê o arquivo e devolve uma lista com as linhas (ou lista vazia se não existir)
+// Lê o arquivo e devolve uma lista com as linhas (ou lista vazia se não existir).
 function ler_linhas($arquivo)
 {
     if (!file_exists($arquivo)) {
